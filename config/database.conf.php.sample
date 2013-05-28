@@ -4,3 +4,4 @@ define('TOMOSFACTORY_DATABASE_HOST','localhost');
 define('TOMOSFACTORY_DATABASE_NAME','tomosfactory'); // Put your database name here
 define('TOMOSFACTORY_DATABASE_USER','user'); // Put your database user here
 define('TOMOSFACTORY_DATABASE_PASSWORD','pass'); // Put your database password here
+define('TOMOSFACTORY_DATABASE_PREFIX','tf_'); // Default prefix for table names
