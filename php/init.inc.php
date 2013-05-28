@@ -7,3 +7,5 @@ function __autoload($class_name) {
         throw new Exception("Unable to load $class_name.");
     }
 }
+
+require_once '../config/database.conf.php';
