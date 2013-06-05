@@ -17,5 +17,5 @@ require_once 'php/libs/smarty/Smarty.class.php';
 /**
  * Library instanciation
  */
-$pdo    = new PDO("mysql:host=" . TOMOSFACTORY_DATABASE_HOST . ";dbname=" . TOMOSFACTORY_DATABASE_NAME, TOMOSFACTORY_DATABASE_USER, TOMOSFACTORY_DATABASE_PASSWORD);
+$pdo    = new PDO("mysql:host=" . DATABASE_HOST . ";dbname=" . DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD);
 $smarty = new Smarty;
