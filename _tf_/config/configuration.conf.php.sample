@@ -1,0 +1,4 @@
+<?php
+
+define('APPLICATION_DOCUMENT_ROOT'  ,$_SERVER['DOCUMENT_ROOT']);
+define('APPLICATION_URL'            ,'tomosfactory.org');

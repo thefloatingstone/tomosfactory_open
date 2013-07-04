@@ -11,8 +11,7 @@ function __autoload($class_name) {
 /**
  * Requirements
  */
-require_once 'config/database.conf.php';
-require_once 'php/libs/smarty/Smarty.class.php';
+require_once APPLICATION_DOCUMENT_ROOT.'php/libs/smarty/Smarty.class.php';
 
 /**
  * Library instanciation
