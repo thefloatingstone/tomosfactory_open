@@ -1,4 +1,4 @@
-API Factomos V1.19 - 03/03/2015
+API Factomos V1.20 - 15/04/2015
 ==============================
 
 # 1. Introduction
@@ -127,7 +127,7 @@ On peut aussi rajouter les paramètres suivants pour créer un couple token/secr
  - app_name: le nom de l’appli
  - app_description: une courte description de l’appli.
  - app_icon: URL de l'icône de l'application (40px x 40px), optionnel
- - webhook_url: URL qui va être notifiée via un POST (cf # 5.) à chaque action faite dans Factomos
+ - webhook_url: URL qui va être notifiée via un POST (cf # 6.) à chaque action faite dans Factomos
 
 ## Paramètres en sortie
 
@@ -269,7 +269,65 @@ JSON RESULT
 }
 ```
 
-# 4. Obtenir le couple token, secret, via le formulaire d'autorisation d'Applications tierces
+
+# 4. Contrôle de la session en cours (SSO)
+
+HTTP GET vers l'URL https://app.factomos.com/api/session/check
+
+JSON RESULT
+```json
+{
+    "error":{
+        "code":0,
+        "message":""
+    },
+    "user":{
+        "id":"568",
+        "username":"contact@factomos.com",
+        "company_id":"550",
+        "app_domain":"dev.factomos.com"
+    }
+}
+```
+
+## Code d'erreurs du CHECK SESSION
+
+Code d'erreur | Message d'erreur                          | Description
+------------: | :---------------------------------------- | :----------------
+0             |                                           | Pas d'erreur, la requête s'est bien passée
+-34           | No session                                | Il n'y a pas de session en cours
+
+## Code d'erreurs du getConnectionToken
+
+Code d'erreur | Message d'erreur                                     | Description
+------------: | :--------------------------------------------------- | :----------------
+0             |                                                      | Pas d'erreur, la requête s'est bien passée
+-1            | Missing Token                                        | Le Champ "token" est manquant, or il est obligatoire
+-2            | Missing Crypted Request                              | Le Champ "crequest" est manquant, or il est obligatoire
+-3            | Invalid Token                                        | Le Token est invalide, il n'existe pas dans la base Factomos
+-4            | Too many API calls for the day                       | Vous avez dépassé le nombre maximum d'appels API pour la journée (par défaut limité à 500)
+-5            | Invalid Crypted Request                              | La requête n'a pas pu être décryptée, le champ crequest est invalide
+-6            | Action not found or invalid                          | Le Champ "action" est manquant, or il est obligatoire
+-28           | Your Token is not associated with a Factomos account | Le token utilisé n'es pas associé à un compte Factomos
+
+## Exemple en mode normal
+
+POST REQUEST
+ - action=getConnectionToken
+ - mode=normal
+
+JSON RESULT
+```json
+{
+    "auth_token":"MY_TOKEN_GENERATED",
+    "error":{
+        "code":0,
+        "message":"OK"
+    }
+}
+```
+
+# 5. Obtenir le couple token, secret, via le formulaire d'autorisation d'Applications tierces
 
 Il faut créer un bouton du genre = « Connecter avec Factomos » qui doit faire l’action suivante :
 
@@ -282,13 +340,13 @@ Les paramètres dans l’URL sont les suivants :
 - app_name: le nom de l’appli
 - app_description: une courte description de l’appli.
 - app_icon: URL de l'icône de l'application (40px x 40px), optionnel
-- webhook_url: URL qui va être notifiée via un POST (cf # 5.) à chaque action faite dans Factomos
+- webhook_url: URL qui va être notifiée via un POST (cf # 6.) à chaque action faite dans Factomos
 
 Ceci va ouvrir une popup d’authentification, si le login et le mot de passe sont corrects, alors FACTOMOS va faire un POST vers l’url de call_back en envoyant les paramètres api_key, et api_secret.
 Ensuite le popup est fermé
 
 
-# 5. Le webhook
+# 6. Le webhook
 
 A chaque action, un contenu JSON va être envoyé en RAW POST vers l'URL de webhook qui a été précisée lors de la connexion de l'appli tierce.
 
@@ -383,7 +441,7 @@ Voici un exemple de POST lors de la création d'un devis.
 ```
 
 
-# 6. Afficher un formulaire de création de devis (au sein de factomos.com) pré-rempli
+# 7. Afficher un formulaire de création de devis (au sein de factomos.com) pré-rempli
 
 Faire un POST vers la page https://app.factomos.com/creer-devis avec les paramètres suivants :
 
@@ -394,7 +452,7 @@ Faire un POST vers la page https://app.factomos.com/creer-devis avec les paramè
 - `estimate_comment` (Champ « commentaire » du devis)
 - `custom`, un champ pour y mettre vos variables, ce dernier sera renvoyé tel quel dans la notification au webhook
 
-# 7. Récupérer les infos d'un client à partir de son id
+# 8. Récupérer les infos d'un client à partir de son id
 
 ## Paramètres en entrée
  - action=getClient, (OBLIGATOIRE)
@@ -458,7 +516,7 @@ JSON RESULT
     
 
 
-# 8. Créer un client
+# 9. Créer un client
 
 ## Paramètres en entrée
 
@@ -532,7 +590,7 @@ JSON RESULT
 }
 ```
 
-# 9. Récupérer les infos d'un service à partir de son id
+# 10. Récupérer les infos d'un service à partir de son id
 
 ## Paramètres en entrée
 
@@ -581,7 +639,7 @@ JSON RESULT
 }
 ```
     
-# 10. Créer un service
+# 11. Créer un service
 
 ## Paramètres en entrée
 
@@ -632,7 +690,7 @@ JSON RESULT
 }
 ```
 
-# 11. Créer une facture
+# 12. Créer une facture
 
 ## Paramètres en entrée
 
@@ -640,6 +698,7 @@ JSON RESULT
 - client_id, (OBLIGATOIRE)
 - invoice_attention
 - objet
+- invoice_date
 - invoice_vat
 - payment_condition_enable
 - payment_amount
@@ -713,7 +772,7 @@ JSON RESULT
 
 Lien vers la facture : https://app.factomos.com/i5u5pHLyBI4pizucVdo6
 
-# 12. Récupérer une facture à partir de son id
+# 13. Récupérer une facture à partir de son id
 
 ## Paramètres en entrée
 
@@ -848,7 +907,7 @@ JSON RESULT
 }
 ```
 
-# 13. Editer une facture
+# 14. Editer une facture
 
 ## Paramètres en entrée
 
@@ -925,7 +984,7 @@ JSON RESULT
 }
 ```
 
-# 14. Envoyer une facture
+# 15. Envoyer une facture
 
 ## Paramètres en entrée
 
@@ -966,7 +1025,7 @@ JSON RESULT
 }
 ```
 
-# 15. Créer un règlement
+# 16. Créer un règlement
 
 ## Paramètres en entrée
 
@@ -979,7 +1038,7 @@ JSON RESULT
 - numero_remise
 - numero_cheque
 
-# 16. Editer un règlement
+# 17. Editer un règlement
 
 ## Paramètres en entrée
 
@@ -1008,7 +1067,7 @@ Code d'erreur | Message d'erreur                                                
 -20           | Invoice not found                                                           | La facture avec cet id n'existe pas dans la base Factomos
 -21           | Several payments for this invoice, you have to add the parameter payment_id | Vous devez ajouter le champ "payment_id" car il y a plusieurs règlements pour cette facture
 
-# 17. Supprimer tous les règlements d'une facture
+# 18. Supprimer tous les règlements d'une facture
 
 ## Paramètres en entrée
 
@@ -1030,7 +1089,7 @@ Code d'erreur | Message d'erreur                          | Description
 -17           | Missing parameter invoice_id              | Le Champ "invoice_id" est manquant, or il est obligatoire
 -20           | Invoice not found                         | La facture avec cet id n'existe pas dans la base Factomos
 
-# 18. Créer une dépense
+# 19. Créer une dépense
 
 ## Paramètres en entrée
 
@@ -1087,7 +1146,7 @@ JSON RESULT
 }
 ```
 
-# 19. Editer une dépense
+# 20. Editer une dépense
 
 ## Paramètres en entrée
 
@@ -1150,7 +1209,7 @@ JSON RESULT
 ```
 
 
-# 20. Récupérer une dépense
+# 21. Récupérer une dépense
 
 ## Paramètres en entrée
 
@@ -1200,7 +1259,7 @@ JSON RESULT
 }
 ```
 
-# 21. Récupérer un devis à partir de son id
+# 22. Récupérer un devis à partir de son id
 
 ## Paramètres en entrée
 
@@ -1302,7 +1361,7 @@ JSON RESULT
 }
 ```
 
-# 22. Créer un devis
+# 23. Créer un devis
 
 ## Paramètres en entrée
 
@@ -1375,7 +1434,7 @@ JSON RESULT
 
 Lien vers le devis : https://app.factomos.com/e5u5pHLyBI4pizucVdo6
 
-# 23. Créer une facture à partir d'un devis
+# 24. Créer une facture à partir d'un devis
 
 ## Paramètres en entrée
 
