@@ -285,7 +285,7 @@ JSON RESULT
         "id":"568",
         "username":"contact@factomos.com",
         "company_id":"550",
-        "app_domain":"dev.factomos.com"
+        "app_domain":"app.factomos.com"
     }
 }
 ```
@@ -297,35 +297,6 @@ Code d'erreur | Message d'erreur                          | Description
 0             |                                           | Pas d'erreur, la requête s'est bien passée
 -34           | No session                                | Il n'y a pas de session en cours
 
-## Code d'erreurs du getConnectionToken
-
-Code d'erreur | Message d'erreur                                     | Description
-------------: | :--------------------------------------------------- | :----------------
-0             |                                                      | Pas d'erreur, la requête s'est bien passée
--1            | Missing Token                                        | Le Champ "token" est manquant, or il est obligatoire
--2            | Missing Crypted Request                              | Le Champ "crequest" est manquant, or il est obligatoire
--3            | Invalid Token                                        | Le Token est invalide, il n'existe pas dans la base Factomos
--4            | Too many API calls for the day                       | Vous avez dépassé le nombre maximum d'appels API pour la journée (par défaut limité à 500)
--5            | Invalid Crypted Request                              | La requête n'a pas pu être décryptée, le champ crequest est invalide
--6            | Action not found or invalid                          | Le Champ "action" est manquant, or il est obligatoire
--28           | Your Token is not associated with a Factomos account | Le token utilisé n'es pas associé à un compte Factomos
-
-## Exemple en mode normal
-
-POST REQUEST
- - action=getConnectionToken
- - mode=normal
-
-JSON RESULT
-```json
-{
-    "auth_token":"MY_TOKEN_GENERATED",
-    "error":{
-        "code":0,
-        "message":"OK"
-    }
-}
-```
 
 # 5. Obtenir le couple token, secret, via le formulaire d'autorisation d'Applications tierces
 
